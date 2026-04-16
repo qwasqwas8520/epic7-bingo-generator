@@ -1,0 +1,290 @@
+/* 讓賓果卡置中 */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+h1 {
+    color: #2c3e50;
+}
+
+p {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* --- 主要三欄式佈局 --- */
+.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 1200px;
+    gap: 20px;
+}
+
+.side-panel {
+    width: 250px;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.side-panel h2 {
+    font-size: 18px;
+    margin-top: 0;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+#bingo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 賓果卡格線 */
+#bingo-card {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    border: 3px solid #3498db; /* 邊框顏色 */
+    border-radius: 8px; /* 圓角 */
+    margin: 20px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 陰影效果 */
+    overflow: hidden; /* 確保圓角生效 */
+}
+
+/* 賓果卡內的格子 */
+.bingo-cell {
+    width: 80px; /* 固定寬度 */
+    height: 80px; /* 固定高度 */
+    border: 1px solid #aed6f1; /* 格子間的邊框 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ecf0f1; /* 格子背景色 */
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.bingo-cell:not(.free-cell):hover {
+    background-color: #eaf2f8; /* 懸停效果 */
+}
+
+/* 按鈕樣式 */
+#generate-btn {
+    margin-top: 20px;
+    padding: 12px 25px;
+    font-size: 18px;
+    background-color: #28a745; /* 綠色按鈕 */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* 賓果卡內的格子 */
+.bingo-cell {
+    width: 100px; /* 放大格子寬度 */
+    height: 100px; /* 放大格子高度 */
+    border: 1px solid #aed6f1; /* 格子間的邊框 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ecf0f1; /* 格子背景色 */
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    overflow: hidden; /* 確保內容不溢出 */
+}
+
+/* 中間的 FREE 格子 */
+.bingo-cell.free-cell {
+    background-color: #3498db; /* 使用主題藍色作為背景 */
+    color: white;              /* 白色文字以形成對比 */
+    font-size: 24px;
+    font-weight: bold;
+    cursor: default;           /* 顯示預設游標，表示不可點擊 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 格子內的輸入框 */
+.bingo-cell .cell-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size: 16px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.8); /* 半透明背景，讓圖片若隱若現 */
+    outline: none;
+    color: #2c3e50;
+    padding: 0;
+    box-sizing: border-box; /* 確保 padding 不增加尺寸 */
+    display: none; /* 預設隱藏 */
+}
+
+/* 格子內的背景圖容器 */
+.bingo-cell .cell-image-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    z-index: 1; /* 確保在輸入框下方 */
+}
+
+#generate-btn:hover {
+    background-color: #218838; /* 懸停時顏色變深 */
+}
+
+/* --- 角色列表樣式 --- */
+.side-panel ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.side-panel li {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.side-panel li:hover {
+    background-color: #f0f8ff;
+}
+
+.side-panel li img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+}
+
+/* 右側列表中被選中的角色樣式 */
+#character-list li.selected {
+    text-decoration: line-through;
+    color: #aaa;
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+}
+
+/* --- 客製化搜尋下拉選單 --- */
+.custom-dropdown {
+    position: absolute;
+    border: 1px solid #ddd;
+    background-color: white;
+    max-height: 400px; /* 增加下拉選單的最大高度 */
+    overflow-y: auto;
+    z-index: 1001; /* 必須比 modal 高 */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: none; /* 預設隱藏 */
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.dropdown-item:hover, .dropdown-item.highlighted {
+    background-color: #eaf2f8;
+}
+
+.dropdown-item img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+}
+
+.dropdown-item span {
+    font-size: 14px;
+}
+
+.dropdown-item.disabled {
+    color: #aaa;
+    background-color: #f9f9f9;
+    cursor: not-allowed;
+}
+
+/* --- 彈出視窗 (Modal) 樣式 --- */
+.modal {
+    display: none; /* 預設隱藏 */
+    position: fixed; /* 固定在畫面上 */
+    z-index: 1000; /* 顯示在最上層 */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* 半透明黑色背景 */
+    /* 使用 flex 來置中內容 */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    max-width: 90vw; /* 最大寬度 */
+}
+
+.modal-instruction {
+    font-size: 16px;
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+#generated-image {
+    max-width: 100%;
+    max-height: 70vh; /* 限制圖片最大高度，避免超出視窗 */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: #bbb;
+    text-decoration: none;
+}
