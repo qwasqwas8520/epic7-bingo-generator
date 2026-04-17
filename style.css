@@ -81,9 +81,14 @@ p {
     background-color: #eaf2f8; /* 懸停效果 */
 }
 
-/* 按鈕樣式 */
-#generate-btn {
+/* --- 按鈕群組 --- */
+.button-group {
+    display: flex;
+    gap: 15px; /* 按鈕間的間距 */
     margin-top: 20px;
+}
+/* 按鈕樣式 */
+#generate-btn, #clear-all-btn {
     padding: 12px 25px;
     font-size: 18px;
     background-color: #28a745; /* 綠色按鈕 */
@@ -92,6 +97,11 @@ p {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+}
+
+/* 次要按鈕樣式 (例如：全部清除) */
+.secondary-btn {
+    background-color: #e74c3c !important; /* 紅色按鈕 */
 }
 
 /* 賓果卡內的格子 */
@@ -153,6 +163,10 @@ p {
 
 #generate-btn:hover {
     background-color: #218838; /* 懸停時顏色變深 */
+}
+
+.secondary-btn:hover {
+    background-color: #c0392b !important; /* 懸停時顏色變深 */
 }
 
 /* --- 角色列表樣式 --- */

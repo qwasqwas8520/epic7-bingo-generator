@@ -74,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- DOM 元素獲取 ---
     const bingoCard = document.getElementById('bingo-card');
     const generateBtn = document.getElementById('generate-btn');
+    const clearAllBtn = document.getElementById('clear-all-btn');
     const modal = document.getElementById('image-modal');
     const modalImage = document.getElementById('generated-image');
     const closeBtn = document.querySelector('.close-btn');
@@ -171,6 +172,22 @@ document.addEventListener('DOMContentLoaded', () => {
         activeInput = null; // 清除 activeInput
     }
 
+    // 清除指定格子的角色
+    function clearCell(cell) {
+        if (!cell || !cellCharacterMap.has(cell)) return;
+
+        const input = cell.querySelector('input');
+        const imageBg = cell.querySelector('.cell-image-bg');
+
+        cellCharacterMap.delete(cell);
+        imageBg.style.backgroundImage = '';
+        imageBg.style.display = 'none';
+        input.value = '';
+        input.placeholder = '點此搜尋...';
+
+        updateLists();
+    }
+
     // --- 初始化 ---
 
     // 1. 建立客製化下拉選單的 DOM
@@ -204,6 +221,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 處理點擊格子顯示輸入框
         cell.addEventListener('click', (e) => {
+            // 如果點擊的格子已經有角色，則清除它
+            if (cellCharacterMap.has(cell)) {
+                clearCell(cell);
+                hideDropdown();
+                return;
+            }
+
             // 如果點擊的是輸入框本身，則不處理格子的點擊事件
             if (e.target === input) return;
 
@@ -232,17 +256,9 @@ document.addEventListener('DOMContentLoaded', () => {
         input.addEventListener('input', () => showDropdown(input, input.value));
         input.addEventListener('keydown', (e) => {
             if ((e.key === 'Backspace' || e.key === 'Delete') && input.value !== '') {
-                // 如果使用者要刪除，先清空狀態
-                if (cellCharacterMap.has(cell)) {
-                    cellCharacterMap.delete(cell);
-                    imageBg.style.backgroundImage = '';
-                    imageBg.style.display = 'none';
-                    input.value = ''; // 直接清空
-                    input.placeholder = '點此搜尋...';
-                    updateLists();
-                    e.preventDefault(); // 阻止預設的刪除行為，因為我們已經手動清空
-                    showDropdown(input, ''); // 清空後重新顯示所有選項
-                }
+                clearCell(cell);
+                e.preventDefault(); // 阻止預設的刪除行為，因為我們已經手動清空
+                showDropdown(input, ''); // 清空後重新顯示所有選項
             }
         });
 
@@ -270,6 +286,16 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     // 3. 初始載入列表
     updateLists();
+
+    // 監聽全部清除按鈕
+    clearAllBtn.addEventListener('click', () => {
+        if (confirm('您確定要清除所有已選的角色嗎？')) {
+            // 遍歷所有非 FREE 的格子並清除
+            document.querySelectorAll('.bingo-cell:not(.free-cell)').forEach(cell => {
+                clearCell(cell);
+            });
+        }
+    });
 
     // 4. 監聽生成按鈕點擊事件
     generateBtn.addEventListener('click', () => {
