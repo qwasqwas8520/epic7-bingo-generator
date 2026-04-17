@@ -52,6 +52,13 @@ p {
     align-items: center;
 }
 
+#lotto-container {
+    margin-top: 40px; /* 與賓果區塊的間距 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 /* 賓果卡格線 */
 #bingo-card {
     display: grid;
@@ -99,13 +106,21 @@ p {
     transition: background-color 0.3s ease;
 }
 
-/* 次要按鈕樣式 (例如：全部清除) */
-.secondary-btn {
-    background-color: #e74c3c !important; /* 紅色按鈕 */
+/* 樂透選角框容器 */
+#lotto-slots-wrapper {
+    display: flex;
+    flex-wrap: wrap; /* 允許換行 */
+    justify-content: center;
+    gap: 15px; /* 選角框之間的間距 */
+    margin-top: 20px;
+    padding: 15px;
+    border: 2px dashed #3498db; /* 虛線邊框 */
+    border-radius: 8px;
+    background-color: #f9f9f9;
 }
 
-/* 賓果卡內的格子 */
-.bingo-cell {
+/* 樂透選角框樣式 (與賓果格子類似，但可能略有不同) */
+.lotto-slot {
     width: 100px; /* 放大格子寬度 */
     height: 100px; /* 放大格子高度 */
     border: 1px solid #aed6f1; /* 格子間的邊框 */
@@ -118,6 +133,22 @@ p {
     transition: all 0.2s ease;
     overflow: hidden; /* 確保內容不溢出 */
 }
+
+.lotto-slot:hover {
+    background-color: #eaf2f8; /* 懸停效果 */
+}
+
+/* 樂透按鈕群組 */
+.lotto-buttons {
+    margin-top: 20px;
+}
+
+/* 次要按鈕樣式 (例如：全部清除) */
+.secondary-btn {
+    background-color: #e74c3c !important; /* 紅色按鈕 */
+}
+
+/* 賓果卡內的格子 */
 
 /* 中間的 FREE 格子 */
 .bingo-cell.free-cell {
@@ -132,7 +163,7 @@ p {
 }
 
 /* 格子內的輸入框 */
-.bingo-cell .cell-input {
+.bingo-cell .cell-input, .lotto-slot .cell-input {
     position: absolute;
     top: 0;
     left: 0;
@@ -150,7 +181,7 @@ p {
 }
 
 /* 格子內的背景圖容器 */
-.bingo-cell .cell-image-bg {
+.bingo-cell .cell-image-bg, .lotto-slot .cell-image-bg {
     position: absolute;
     top: 0;
     left: 0;
