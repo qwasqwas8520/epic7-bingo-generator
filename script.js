@@ -184,6 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
         imageBg.style.display = 'none';
         input.value = '';
         input.placeholder = '點此搜尋...';
+        input.style.display = 'block'; // 新增：清除後重新顯示輸入框
 
         updateLists();
     }
