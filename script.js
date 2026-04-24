@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const ml5Stars = [
     {name: "年輕的女王夏綠蒂", image: "年輕的女王夏綠蒂.png", pinyin: "nqxhld"},
     {name: "繼承人太悟", image: "繼承人太悟.webp", pinyin: "jcrtaiwu"},
-    {name: "光之英雄 迪利貝", image: "光之英雄 迪利貝.webp", pinyin: "gzyxdlb"},
     {name: "獅心王潔若米亞", image: "獅心王潔若米亞.webp", pinyin: "sxwjlmy"},
     {name: "審判者綺世", image: "審判者綺世.webp", pinyin: "spqs"},
     {name: "伯里安", image: "伯里安.webp", pinyin: "blan"},
