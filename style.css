@@ -55,19 +55,21 @@ p {
 /* 賓果卡格線 */
 #bingo-card {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    border: 3px solid #3498db; /* 邊框顏色 */
-    border-radius: 8px; /* 圓角 */
+    grid-template-columns: repeat(5, 1fr); /* 將 fr 單位改為固定的 100px */
+    gap: 1px; /* 用 1px 的間距來模擬格線 */
+    border: 1px solid #3498db; /* 調整為 1px 粗的邊框 */
+    border-radius: 2px; /* 圓角 */
     margin: 0; /* 移除上下邊距，讓它能和樂透區塊貼合 */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 陰影效果 */
     overflow: hidden; /* 確保圓角生效 */
+    background-color: #aed6f1; /* 這個顏色會成為格線的顏色 */
 }
 
 /* 賓果卡內的格子 */
 .bingo-cell {
-    width: 100px;
-    height: 100px;
-    border: 1px solid #aed6f1; /* 格子間的邊框 */
+    width: 150px;
+    height: 150px;
+    border: none; /* 移除格子自身的邊框 */
     display: flex;
     justify-content: center;
     align-items: center;
