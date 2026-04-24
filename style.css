@@ -55,7 +55,7 @@ p {
 /* 賓果卡格線 */
 #bingo-card {
     display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 將 fr 單位改為固定的 100px */
+    grid-template-columns: repeat(5, 150px);
     gap: 1px; /* 用 1px 的間距來模擬格線 */
     border: 1px solid #3498db; /* 調整為 1px 粗的邊框 */
     border-radius: 2px; /* 圓角 */

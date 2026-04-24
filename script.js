@@ -355,6 +355,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // 隱藏可能已打開的其他下拉選單
             hideDropdown();
 
+            // 核心修正：在定位前，確保輸入框是可見的
+            input.style.display = 'block';
+
             // 將當前輸入框設為活動目標
             activeInput = input;
             // 直接顯示下拉選單，不過濾任何關鍵字
