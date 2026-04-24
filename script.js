@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const input = cell.querySelector('input');
         const imageBg = cell.querySelector('.cell-image-bg');
 
-        input.value = char.name;
+        input.value = char.name; // 雖然隱藏，但仍保留值供內部邏輯使用
         imageBg.style.backgroundImage = `url('image/${char.image}')`;
         imageBg.style.display = 'block';
         input.style.display = 'none';
@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
         imageBg.style.backgroundImage = '';
         imageBg.style.display = 'none';
         input.value = '';
-        input.placeholder = '點此搜尋...';
+        input.placeholder = '點此選擇';
         input.style.display = 'block'; // 新增：清除後重新顯示輸入框
 
         updateLists();
@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
         imageBg.style.backgroundImage = '';
         imageBg.style.display = 'none';
         input.value = '';
-        input.placeholder = '點此搜尋...';
+        input.placeholder = '點此選擇';
         input.style.display = 'block';
         updateLists();
     }
@@ -349,20 +349,21 @@ document.addEventListener('DOMContentLoaded', () => {
         cell.addEventListener('click', (e) => {
             if (lotteryCellCharacterMap.has(cell) && e.target !== input) {
                 clearLotteryCell(cell);
-                hideDropdown();
                 return;
             }
-            if (e.target === input) return;
 
+            // 隱藏可能已打開的其他下拉選單
             hideDropdown();
 
-            input.style.display = 'block';
-            imageBg.style.display = 'none';
-            input.focus();
+            // 將當前輸入框設為活動目標
             activeInput = input;
-            showDropdown(input, input.value);
+            // 直接顯示下拉選單，不過濾任何關鍵字
+            showDropdown(input, ''); 
         });
 
+        // 我們不再需要對樂透圈的 input 監聽 focus, input, keydown 事件
+        // 因為點擊 cell 就會處理所有事情
+        /*
         input.addEventListener('focus', () => {
             activeInput = input;
             showDropdown(input, input.value);
@@ -377,6 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
+        */
 
         lotteryRow.appendChild(cell);
     }
