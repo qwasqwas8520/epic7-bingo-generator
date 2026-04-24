@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const ml5Stars = [
     {name: "年輕的女王夏綠蒂", image: "年輕的女王夏綠蒂.png", pinyin: "nqxhld"},
     {name: "繼承人太悟", image: "繼承人太悟.webp", pinyin: "jcrtaiwu"},
-    {name: "支配者莉莉亞斯", image: "支配者莉莉亞斯.webp", pinyin: "zpbzllys"},
     {name: "光之英雄 迪利貝", image: "光之英雄 迪利貝.webp", pinyin: "gzyxdlb"},
     {name: "獅心王潔若米亞", image: "獅心王潔若米亞.webp", pinyin: "sxwjlmy"},
     {name: "審判者綺世", image: "審判者綺世.webp", pinyin: "spqs"},
@@ -75,8 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- DOM 元素獲取 ---
     const bingoCard = document.getElementById('bingo-card');
     const generateBtn = document.getElementById('generate-btn');
-    const lottoSlotsWrapper = document.getElementById('lotto-slots-wrapper');
-    const clearLottoBtn = document.getElementById('clear-lotto-btn');
     const clearAllBtn = document.getElementById('clear-all-btn');
     const modal = document.getElementById('image-modal');
     const modalImage = document.getElementById('generated-image');
@@ -88,22 +85,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 狀態變數 ---
     const gridSize = 5;
     const totalCells = gridSize * gridSize;
-    const cellCharacterMap = new Map(); // 賓果盤 cell -> character 的關係
-    const lottoCharacterMap = new Map(); // 樂透 slot -> character 的關係
+    const cellCharacterMap = new Map(); // 使用 Map 來儲存 cell -> character 的關係
     let activeInput = null; // 當前正在編輯的輸入框
     let dropdown; // 客製化下拉選單的 DOM 元素
-    const LOTTO_MAX_SELECTIONS = 6; // 樂透最多選擇數量
     // --- 函式定義 ---
 
 
     // 獲取當前所有已選角色的集合
     const getCurrentlySelectedChars = () => new Set(Array.from(cellCharacterMap.values()).map(c => c.name));
-
     // 更新左右列表的顯示
-    function updateLists(sourceMap = null) { // sourceMap 參數用於判斷是賓果還是樂透觸發
-        // 合併賓果和樂透已選角色
-        const allSelectedChars = new Set([...Array.from(cellCharacterMap.values()).map(c => c.name),
-                                          ...Array.from(lottoCharacterMap.values()).map(c => c.name)]);
+    function updateLists() {
+        const allSelectedChars = getCurrentlySelectedChars();
 
         // 更新右側總列表
         characterList.innerHTML = '';
@@ -111,17 +103,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const isSelected = getCurrentlySelectedChars().has(char.name); // 檢查是否已被選
             const li = document.createElement('li');
             li.innerHTML = `<img src="image/${char.image}" alt="${char.name}"><span>${char.name}</span>`;
-
-            if (allSelectedChars.has(char.name)) { // 如果已被選，則添加 selected 樣式
+            if (isSelected) { // 如果已被選，則添加 selected 樣式
                 li.classList.add('selected');
             }
             characterList.appendChild(li);
         });
 
         // 更新左側已選列表
-        // 這裡只顯示賓果已選角色，如果樂透也要顯示，需要額外處理
         selectedList.innerHTML = '';
-        // 顯示賓果已選角色
         Array.from(cellCharacterMap.values()).forEach(char => { // 這裡只顯示賓果已選角色
             const li = document.createElement('li');
             li.innerHTML = `<img src="image/${char.image}" alt="${char.name}"><span>${char.name}</span>`;
@@ -136,8 +125,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // 填充並顯示客製化下拉選單
     function showDropdown(inputElement, filter = '') {
         const rect = inputElement.getBoundingClientRect();
-        dropdown.style.left = `${rect.left + window.scrollX}px`; // 考慮滾動位置
-        dropdown.style.top = `${rect.bottom + window.scrollY}px`; // 考慮滾動位置
+        dropdown.style.left = `${rect.left}px`;
+        dropdown.style.top = `${rect.bottom}px`;
         dropdown.style.width = `250px`; // 將下拉選單寬度固定為 250px
         dropdown.innerHTML = ''; // 清空舊選項
 
@@ -151,15 +140,8 @@ document.addEventListener('DOMContentLoaded', () => {
         filteredChars.forEach(char => {
             const item = document.createElement('div');
             item.classList.add('dropdown-item');
-            item.innerHTML = `<img src="image/${char.image}" alt="${char.name}"><span>${char.name}</span>`;
-            
-            // 判斷是賓果格子還是樂透選角框
-            const parentCellOrSlot = inputElement.closest('.bingo-cell') || inputElement.closest('.lotto-slot');
-            if (parentCellOrSlot.classList.contains('lotto-slot')) {
-                item.addEventListener('click', () => selectCharacterForLottoSlot(parentCellOrSlot, char));
-            } else {
+            item.innerHTML = `<img src="image/${char.image}" alt="${char.name}"><span>${char.name}</span>`; // 確保圖片路徑正確
             item.addEventListener('click', () => selectCharacterForCell(inputElement.parentElement, char));
-            }
             dropdown.appendChild(item);
         });
 
@@ -190,23 +172,6 @@ document.addEventListener('DOMContentLoaded', () => {
         activeInput = null; // 清除 activeInput
     }
 
-    // 為樂透選角框選擇角色
-    function selectCharacterForLottoSlot(slot, char) {
-        const input = slot.querySelector('input');
-        const imageBg = slot.querySelector('.cell-image-bg');
-
-        input.value = char.name;
-        imageBg.style.backgroundImage = `url('image/${char.image}')`;
-        imageBg.style.display = 'block';
-        input.style.display = 'none';
-        input.placeholder = '';
-
-        lottoCharacterMap.set(slot, char);
-        updateLists();
-        hideDropdown();
-        activeInput = null;
-    }
-
     // 清除指定賓果格子的角色
     function clearCell(cell) {
         if (!cell || !cellCharacterMap.has(cell)) return;
@@ -227,24 +192,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateLists();
     }
 
-    // 清除指定樂透選角框的角色
-    function clearLottoSlot(slot) {
-        if (!slot || !lottoCharacterMap.has(slot)) return;
-
-        // 確保清除的是樂透盤的 Map
-        if (!lottoCharacterMap.has(slot)) return;
-
-        const input = slot.querySelector('input');
-        const imageBg = slot.querySelector('.cell-image-bg');
-
-        lottoCharacterMap.delete(slot);
-        imageBg.style.backgroundImage = '';
-        imageBg.style.display = 'none';
-        input.value = '';
-        input.placeholder = '點此搜尋...';
-        input.style.display = 'block';
-        updateLists();
-    }
     // --- 初始化 ---
 
     // 1. 建立客製化下拉選單的 DOM
@@ -315,7 +262,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if ((e.key === 'Backspace' || e.key === 'Delete') && input.value !== '') {
                 clearCell(cell); // 賓果格子清除
                 e.preventDefault(); // 阻止預設的刪除行為，因為我們已經手動清空
-                showDropdown(input, ''); // 清空後重新顯示所有選項
+                // 清空後重新顯示所有選項 (如果輸入框是可見的)
+                if (input.style.display === 'block') {
+                    showDropdown(input, '');
+                }
+
             }
         });
 
@@ -323,58 +274,8 @@ document.addEventListener('DOMContentLoaded', () => {
         bingoCard.appendChild(cell);
     }
 
-    // 3. 建立樂透選角框
-    function createLottoSlots() {
-        for (let i = 0; i < LOTTO_MAX_SELECTIONS; i++) {
-            const slot = document.createElement('div');
-            slot.classList.add('lotto-slot');
-
-            const imageBg = document.createElement('div');
-            imageBg.classList.add('cell-image-bg');
-            imageBg.style.display = 'none';
-            slot.appendChild(imageBg);
-
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.classList.add('cell-input');
-            input.placeholder = '點此搜尋...';
-            slot.appendChild(input);
-
-            // 處理點擊樂透選角框
-            slot.addEventListener('click', (e) => {
-                if (lottoCharacterMap.has(slot) && e.target !== input) {
-                    clearLottoSlot(slot);
-                    hideDropdown();
-                    return;
-                }
-                if (e.target === input) return;
-
-                // 隱藏所有其他輸入框和下拉選單
-                document.querySelectorAll('.bingo-cell .cell-input, .lotto-slot .cell-input').forEach(otherInput => {
-                    if (otherInput !== input) {
-                        otherInput.style.display = 'none';
-                        const parentElement = otherInput.closest('.bingo-cell') || otherInput.closest('.lotto-slot');
-                        const charInMap = parentElement.classList.contains('bingo-cell') ? cellCharacterMap.get(parentElement) : lottoCharacterMap.get(parentElement);
-                        parentElement.querySelector('.cell-image-bg').style.display = charInMap ? 'block' : 'none';
-                    }
-                });
-                hideDropdown();
-
-                input.style.display = 'block';
-                imageBg.style.display = 'none';
-                input.focus();
-                activeInput = input;
-                showDropdown(input, input.value);
-            });
-
-            input.addEventListener('focus', () => { activeInput = input; showDropdown(input, input.value); });
-            input.addEventListener('input', () => showDropdown(input, input.value));
-            input.addEventListener('keydown', (e) => {
-                if ((e.key === 'Backspace' || e.key === 'Delete') && input.value !== '') { clearLottoSlot(slot); e.preventDefault(); showDropdown(input, ''); }
-            });
-            lottoSlotsWrapper.appendChild(slot);
-        }
-    }
+    // 3. 初始載入列表
+    updateLists();
 
     // --- 全域事件監聽 ---
     closeBtn.onclick = () => { modal.style.display = "none"; };
@@ -382,33 +283,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (event.target == modal) {
             modal.style.display = "none";
         }
-        // 點擊下拉選單、輸入框以外的地方時，隱藏下拉選單和所有輸入框
-        if (!dropdown.contains(event.target) && !event.target.closest('.bingo-cell') && !event.target.closest('.lotto-slot')) {
+        // 點擊下拉選單、輸入框以外的地方時，隱藏下拉選單和所有賓果輸入框
+        if (!dropdown.contains(event.target) && !event.target.closest('.bingo-cell')) {
             hideDropdown();
-            document.querySelectorAll('.bingo-cell .cell-input, .lotto-slot .cell-input').forEach(otherInput => {
+            document.querySelectorAll('.bingo-cell .cell-input').forEach(otherInput => {
                 otherInput.style.display = 'none';
-                const parentElement = otherInput.closest('.bingo-cell') || otherInput.closest('.lotto-slot');
-                const charInMap = parentElement.classList.contains('bingo-cell') ? cellCharacterMap.get(parentElement) : lottoCharacterMap.get(parentElement);
-                parentElement.querySelector('.cell-image-bg').style.display = charInMap ? 'block' : 'none';
+                const parentCell = otherInput.parentElement;
+                const charInCell = cellCharacterMap.get(parentCell);
+                parentCell.querySelector('.cell-image-bg').style.display = charInCell ? 'block' : 'none';
             });
             activeInput = null;
         }
     };
-
-    // 呼叫建立樂透選角框的函式
-    createLottoSlots();
-
-    // 3. 初始載入列表
-    updateLists();
-
-    // 監聽樂透全部清除按鈕
-    clearLottoBtn.addEventListener('click', () => {
-        if (confirm('您確定要清除所有樂透選角嗎？')) {
-            document.querySelectorAll('.lotto-slot').forEach(slot => {
-                clearLottoSlot(slot);
-            });
-        }
-    });
 
     // 監聽全部清除按鈕
     clearAllBtn.addEventListener('click', () => {
