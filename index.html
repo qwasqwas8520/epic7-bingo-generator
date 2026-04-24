@@ -13,15 +13,26 @@
     <div class="main-container">
         <!-- 左側：已選擇的角色列表 -->
         <div class="side-panel" id="selected-characters-panel">
-            <h2>已選角色 (<span>0</span>/24)</h2> 
+            <h2>已選角色 (<span>0</span>)</h2> 
             <ul id="selected-list"></ul>
         </div>
 
         <!-- 中間：賓果盤 -->
         <div id="bingo-container">
-            <div id="bingo-card"></div>
-            <div class="button-group">
-                <button id="generate-btn">生成賓果卡圖片</button>
+            <div id="capture-area">
+                <div id="bingo-card" class="bingo-card">
+                    <!-- JavaScript 會在這裡生成賓果格子 -->
+                </div>
+                <!-- 新增的樂透區塊 -->
+                <div class="lottery-container">
+                    <h2>月光樂透 (Lottery)</h2>
+                    <div id="lottery-row" class="lottery-row">
+                        <!-- JavaScript 會在這裡生成 6 個圈圈 -->
+                    </div>
+                </div>
+            </div>
+            <div class="controls button-group">
+                <button id="generate-btn">生成 Bingo & 樂透圖片</button>
                 <button id="clear-all-btn" class="secondary-btn">全部清除</button>
             </div>
         </div>

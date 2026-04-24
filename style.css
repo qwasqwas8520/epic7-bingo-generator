@@ -58,15 +58,15 @@ p {
     grid-template-columns: repeat(5, 1fr);
     border: 3px solid #3498db; /* 邊框顏色 */
     border-radius: 8px; /* 圓角 */
-    margin: 20px 0;
+    margin: 0; /* 移除上下邊距，讓它能和樂透區塊貼合 */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 陰影效果 */
     overflow: hidden; /* 確保圓角生效 */
 }
 
 /* 賓果卡內的格子 */
 .bingo-cell {
-    width: 100px; /* 放大格子寬度 */
-    height: 100px; /* 放大格子高度 */
+    width: 100px;
+    height: 100px;
     border: 1px solid #aed6f1; /* 格子間的邊框 */
     display: flex;
     justify-content: center;
@@ -287,4 +287,68 @@ p {
 .close-btn:focus {
     color: #bbb;
     text-decoration: none;
+}
+
+/* --- 樂透區塊樣式 --- */
+.lottery-container {
+    margin-top: 20px; /* 調整與賓果盤的間距 */
+    padding: 0; /* 移除內邊距 */
+    background-color: transparent; /* 背景設為透明 */
+    box-shadow: none; /* 移除陰影 */
+    text-align: center;
+}
+
+.lottery-container h2 {
+    display: block; /* 重新顯示樂透標題 */
+}
+
+.lottery-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.lottery-cell {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%; /* 圓形 */
+    border: 2px dashed #bdc3c7;
+    background-color: #ecf0f1;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* 確保背景圖不會超出圓形 */
+}
+
+.lottery-cell:hover {
+    border-color: #3498db;
+    transform: scale(1.05);
+}
+
+.lottery-cell .cell-image-bg {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%; /* 確保圖片背景也是圓的 */
+}
+
+.lottery-cell .cell-input {
+    width: 80%;
+    border: none;
+    background: transparent;
+    text-align: center;
+    outline: none;
+    font-size: 14px;
+}
+
+/* 截圖區域的容器 */
+#capture-area {
+    padding: 20px;
+    background-color: #ecf0f1; /* 給截圖一個背景色 */
+    display: inline-block; /* 讓容器寬度由內容決定 */
+    /* 移除 transition，因為我們不再動態改變 padding */
 }
