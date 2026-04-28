@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
     {name: "諾托斯", image: "諾托斯.webp", pinyin: "nts"},
     {name: "龍之伴侶賽娜", image: "龍之伴侶賽娜.webp", pinyin: "lzblsn"},
     {name: "海軍上校蘭蒂", image: "海軍上校蘭蒂.webp", pinyin: "hjsxld"},
-    {name: "起源拉斯", image: "起源拉斯.webp", pinyin: "qyls"},
     {name: "組長亞露嘉", image: "組長亞露嘉.webp", pinyin: "zzyrj"},
     {name: "最後的騎士克勞烏", image: "最後的騎士克勞烏.webp", pinyin: "zhdqsclw"},
     {name: "蒼穹伊莉娜芙", image: "蒼穹伊莉娜芙.webp", pinyin: "cqylnf"},
